@@ -47,9 +47,74 @@ class Attraction:
             return
 
         self.is_running = True
-        print(f"Starting the ride for {self.name} with {self.sold_tickets} passengers.")
-        time.sleep(self.ride_duration)  # Simulating ride
-        self.end_ride()
+        print(f"Starting {self.name} with {self.sold_tickets} passengers. Duration: {self.ride_duration}s")
+
+        frames = [
+            """
+               _____
+              /\\:::\\
+             /  \\::.\\
+            { () }\\::|
+             \\  /\\::/
+              \\/__\\/
+            """,
+            """
+               _____
+              /\\...\\
+             /  \\::;\\
+            { || }\\::|
+             \\  /\\::/
+              \\/__\\/
+            """,
+            """
+               _____
+              /\\:::_\\
+             /  \\:::;\\
+            { ++ }\\::|
+             \\  /\\::/
+              \\/__\\/
+            """,
+            """
+               _____
+              /\\____\\
+             /  \\:::;\\
+            { <> }\\::|
+             \\  /\\::/
+              \\/__\\/
+            """
+        ]
+
+        start_time = time.time()
+        duration = self.ride_duration
+        frame_delay = 0.15
+        total_frames = len(frames)
+        current_frame = 0
+
+        try:
+            while (time.time() - start_time) < duration:
+                print("\033[H\033[J", end="")
+
+                elapsed = time.time() - start_time
+                progress = elapsed / duration
+                remaining = duration - elapsed
+
+                print(f"Ride: {self.name} | Time left: {remaining:.1f}s")
+                print("+" + "-" * 50 + "+")
+
+                print(frames[current_frame % total_frames])
+
+                print(" " * 13 + "|______|")
+                print(" " * 10 + "/:::::::::::\\")
+                print("=" * 60)
+
+                current_frame += 1
+                time.sleep(frame_delay)
+
+        except KeyboardInterrupt:
+            print("\nRide interrupted by operator!")
+        finally:
+            print("\033[H\033[J", end="")  # Окончательная очистка
+            self.end_ride()
 
     def end_ride(self):
         print(f"Ride {self.name} has finished.")

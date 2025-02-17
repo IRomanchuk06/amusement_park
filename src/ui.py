@@ -123,6 +123,23 @@ class ParkInterface:
         self.ride_manager.manage_queue_and_start(attraction, queue)
         attraction.start_ride()
 
+    def increase_visitor_balance(self):
+        self.show_visitor_list()
+        if not self.park.visitors:
+            print("No visitors registered yet!")
+            return
+
+        vis_idx = utils.get_valid_input("\nSelect visitor number: ", int) - 1
+        if vis_idx < 0 or vis_idx >= len(self.park.visitors):
+            print("Invalid visitor selection!")
+            return
+
+        visitor = self.park.visitors[vis_idx]
+        amount = utils.get_valid_input(f"Enter amount to add to {visitor.name}'s balance: $", float)
+
+        visitor.earn_money(amount)
+        print(f"\nSuccess: {visitor.name}'s new balance is ${visitor.balance:.2f}")
+
     def add_attraction_flow(self):
         utils.display_header("new attraction registration")
         name = input("Enter attraction name: ").strip()
@@ -148,9 +165,10 @@ class ParkInterface:
             print("7. Save Park State")
             print("8. Load Park State")
             print("9. Add New Attraction")
-            print("10. Exit System")
+            print("10. Top Up Visitor Balance")
+            print("11. Exit System")
 
-            choice = utils.get_menu_choice("\nEnter option number: ", range(1, 11))
+            choice = utils.get_menu_choice("\nEnter option number: ", range(1, 12))
 
             if choice == 1:
                 self.add_visitor_flow()
@@ -172,7 +190,9 @@ class ParkInterface:
                 self.load_from_file(filename)
             elif choice == 9:
                 self.add_attraction_flow()
-            elif choice == 10:
+            elif choice == 10: 
+                self.increase_visitor_balance()
+            elif choice == 11:
                 print("\nExiting system... Thank you for using Park Manager!")
                 break
             else:
