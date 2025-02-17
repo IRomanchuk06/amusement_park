@@ -74,6 +74,9 @@ python -m src.main
 ### Class Diagram
 ![Class Diagram](docs/classes_my_project.png)
 
+### States Diagram
+![State Diagram](docs/states_my_project.png)
+
 ### Packages Diagram
 ![State Diagram](docs/packages_my_project.png)
 
