@@ -1,5 +1,5 @@
 from src.models.workers import *
-
+from src.serialization import save_to_file, load_from_file
 
 class AmusementPark:
     def __init__(self):
@@ -29,3 +29,10 @@ class AmusementPark:
         for queue in self.queues:
             print(f"Queue for {queue.attraction.name}: {len(queue.queue)} people.")
         print(f"Park balance: {self.cash_register.get_balance()} units.")
+
+    def save_park_state(self, filename: str):
+        save_to_file(self, filename)
+
+    @staticmethod
+    def load_park_state(filename: str):
+        return load_from_file(filename)
