@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 
 from src.models.park_models import Attraction, Queue, CashRegister
 from src.models.amusement_park import AmusementPark
