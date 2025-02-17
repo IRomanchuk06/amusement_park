@@ -1,4 +1,3 @@
-import pickle
 from src import utils
 from src.models.workers import Cashier, RideManager
 from src.models.park_models import Attraction, Visitor
@@ -19,16 +18,14 @@ class ParkInterface:
 
     def save_to_file(self, filename):
         try:
-            with open(filename, 'wb') as file:
-                pickle.dump(self.park, file)
+            self.park.save_park_state(filename)
             print(f"Park saved to {filename}.")
         except Exception as e:
             print(f"Error saving park: {e}")
 
     def load_from_file(self, filename):
         try:
-            with open(filename, 'rb') as file:
-                self.park = pickle.load(file)
+            self.park = AmusementPark.load_park_state(filename)
             print(f"Park loaded from {filename}.")
         except Exception as e:
             print(f"Error loading park: {e}")
@@ -126,6 +123,19 @@ class ParkInterface:
         self.ride_manager.manage_queue_and_start(attraction, queue)
         attraction.start_ride()
 
+    def add_attraction_flow(self):
+        utils.display_header("new attraction registration")
+        name = input("Enter attraction name: ").strip()
+        min_age = utils.get_valid_input("Enter minimum age: ", int)
+        min_height = utils.get_valid_input("Enter minimum height (meters): ", float)
+        ticket_price = utils.get_valid_input("Enter ticket price: $", float)
+        ticket_limit = utils.get_valid_input("Enter ticket limit: ", int)
+        sold_tickets = utils.get_valid_input("Enter sold tickets: ", int)
+
+        new_attraction = Attraction(name, min_age, min_height, ticket_limit, sold_tickets, ticket_price)
+        self.park.add_attraction(new_attraction)
+        print(f"\nSuccess: {name} added as a new attraction")
+
     def main_menu(self):
         while True:
             utils.display_header("amusement park management system")
@@ -137,9 +147,10 @@ class ParkInterface:
             print("6. Park Status Overview")
             print("7. Save Park State")
             print("8. Load Park State")
-            print("9. Exit System")
+            print("9. Add New Attraction")
+            print("10. Exit System")
 
-            choice = utils.get_menu_choice("\nEnter option number: ", range(1,10))
+            choice = utils.get_menu_choice("\nEnter option number: ", range(1, 11))
 
             if choice == 1:
                 self.add_visitor_flow()
@@ -160,9 +171,11 @@ class ParkInterface:
                 filename = input("Enter the filename to load park state: ")
                 self.load_from_file(filename)
             elif choice == 9:
+                self.add_attraction_flow()
+            elif choice == 10:
                 print("\nExiting system... Thank you for using Park Manager!")
                 break
             else:
-                print("Invalid selection. Please choose 1-9")
+                print("Invalid selection. Please choose 1-10")
 
             input("\nPress Enter to continue...")

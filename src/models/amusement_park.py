@@ -24,11 +24,32 @@ class AmusementPark:
 
     def show_park_status(self):
         print("\nCurrent status of the park:")
+
         for attraction in self.attractions:
-            print(f"{attraction.name}: {attraction.sold_tickets}/{attraction.ticket_limit} tickets sold.")
+            status = "OPEN" if attraction.has_available_tickets() else "SOLD OUT"
+            print(f"\n{attraction.name} - {status}:")
+            print(
+                f"  Min Age: {attraction.min_age} | Min Height: {attraction.min_height}m | Price: ${attraction.ticket_price:.2f}")
+            print(f"  {attraction.sold_tickets}/{attraction.ticket_limit} tickets sold.")
+            print(f"  Tickets available: {attraction.ticket_limit - attraction.sold_tickets}")
+
         for queue in self.queues:
-            print(f"Queue for {queue.attraction.name}: {len(queue.queue)} people.")
-        print(f"Park balance: {self.cash_register.get_balance()} units.")
+            attraction = queue.attraction
+            print(f"\nQueue for {attraction.name}:")
+            print(f"  Total in queue: {len(queue.queue)} people.")
+            for i, visitor in enumerate(queue.queue, 1):
+                print(f"  {i}. {visitor.name} (Balance: ${visitor.balance:.2f})")
+
+        print(f"\nPark balance: {self.cash_register.get_balance()} units.")
+
+        if self.visitors:
+            print("\nVisitors currently in the park:")
+            for visitor in self.visitors:
+                print(
+                    f"  {visitor.name} - Age: {visitor.age}, Height: {visitor.height}m, Balance: ${visitor.balance:.2f}")
+                print(f"  Tickets: {len([ticket for ticket in visitor.tickets if not ticket.used])} valid tickets.")
+        else:
+            print("No visitors in the park.")
 
     def save_park_state(self, filename: str):
         save_to_file(self, filename)

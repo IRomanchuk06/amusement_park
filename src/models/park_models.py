@@ -57,6 +57,9 @@ class Attraction:
         self.is_running = False
         print(f"Tickets for {self.name} have been reset for the next ride.")
 
+    def has_available_tickets(self):
+        return self.sold_tickets < self.ticket_limit
+
 class Ticket:
     def __init__(self, attraction: Attraction):
         self.attraction = attraction
