@@ -59,6 +59,3 @@ class TestUserInputFunctions(unittest.TestCase):
         output = mock_stdout.getvalue().strip()
         expected_output = "========================================\n               TEST TITLE               \n========================================"
         self.assertEqual(output, expected_output)
-
-if __name__ == '__main__':
-    unittest.main()

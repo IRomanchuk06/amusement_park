@@ -76,7 +76,3 @@ class TestSerialization(unittest.TestCase):
 
         if os.path.exists(invalid_filename):
             os.remove(invalid_filename)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from src.models.park_models import Attraction, Queue, CashRegister
 from src.models.amusement_park import AmusementPark
@@ -62,6 +63,10 @@ class TestAmusementPark(unittest.TestCase):
         self.visitor.earn_money(20.0)
         self.assertEqual(self.visitor.balance, 70.0)
 
+    def test_earn_money_for_visitor_neg_amount(self):
+        self.visitor.earn_money(-20.0)
+        self.assertEqual(self.visitor.balance, 50.0)
+
     def test_ticket_usage(self):
         self.cashier.sell_ticket(self.visitor, self.attraction)
         ticket = self.visitor.tickets[0]
@@ -69,6 +74,37 @@ class TestAmusementPark(unittest.TestCase):
         self.visitor.use_ticket(self.attraction)
         self.assertTrue(ticket.used)
 
+    @patch('builtins.input', side_effect=['1'])
+    def test_choose_attraction_valid(self, mock_input):
+        self.cashier.sell_ticket(self.visitor, self.attraction)
+        self.visitor.choose_attraction()
 
-if __name__ == "__main__":
-    unittest.main()
+        self.assertEqual(self.visitor.tickets[0].attraction, self.attraction)
+        self.assertFalse(self.visitor.tickets[0].used)
+
+    @patch('src.models.visitor.get_menu_choice', return_value=0)
+    def test_choose_attraction_invalid_choice(self, mock_get_menu_choice):
+        self.cashier.sell_ticket(self.visitor, self.attraction)
+        result = self.visitor.choose_attraction(choice=None)
+        self.assertIsNone(result)
+        mock_get_menu_choice.assert_called_once_with("Enter the attraction number: ",
+                                                     range(1, len(self.visitor.tickets) + 1))
+
+    @patch('builtins.input', side_effect=['1'])
+    def test_choose_attraction_already_used_ticket(self, mock_input):
+        self.cashier.sell_ticket(self.visitor, self.attraction)
+        self.visitor.use_ticket(self.attraction)
+        result = self.visitor.choose_attraction()
+
+        self.assertIsNone(result)
+        mock_input.assert_called_once()
+
+    @patch('builtins.input', side_effect=['1'])
+    @patch('builtins.print')
+    def test_choose_attraction_no_ticket(self, mock_print, mock_input):
+        no_ticket_visitor = Visitor("Jane", 22, 1.6, 20.0)
+        result = no_ticket_visitor.choose_attraction()
+
+        self.assertIsNone(result)
+        mock_print.assert_called_with("Jane has not bought any tickets yet.")
+        mock_input.assert_not_called()

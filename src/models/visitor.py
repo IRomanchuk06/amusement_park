@@ -13,21 +13,22 @@ class Visitor:
             print(f"{self.name} has not bought any tickets yet.")
             return None
 
-        if choice is None:
-            print(f"\n{self.name}, choose an attraction from your tickets:")
-            for idx, ticket in enumerate(self.tickets, 1):
-                print(f"{idx}. {ticket.attraction.name}")
-            choice = get_menu_choice("Enter the attraction number: ", range(1, len(self.tickets) + 1)) - 1
+        print(f"\n{self.name}, choose an attraction from your tickets:")
+        for idx, ticket in enumerate(self.tickets, 1):
+            print(f"{idx}. {ticket.attraction.name}")
 
-        if 0 <= choice < len(self.tickets):
-            selected_ticket = self.tickets[choice]
-            if selected_ticket.used:
-                print(f"Ticket for {selected_ticket.attraction.name} has already been used.")
-                return None
-            return selected_ticket.attraction
-        else:
-            print("Invalid choice.")
+        choice = get_menu_choice("Enter the attraction number: ", range(1, len(self.tickets) + 1)) - 1
+
+        if choice < 0 or choice >= len(self.tickets):
+            print(f"Invalid choice. Please choose a number between 1 and {len(self.tickets)}.")
             return None
+
+        selected_ticket = self.tickets[choice]
+        if selected_ticket.used:
+            print(f"Ticket for {selected_ticket.attraction.name} has already been used.")
+            return None
+
+        return selected_ticket.attraction
 
     def earn_money(self, amount: float):
         if amount < 0:
