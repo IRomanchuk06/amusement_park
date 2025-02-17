@@ -28,4 +28,4 @@ class AmusementPark:
             print(f"{attraction.name}: {attraction.sold_tickets}/{attraction.ticket_limit} tickets sold.")
         for queue in self.queues:
             print(f"Queue for {queue.attraction.name}: {len(queue.queue)} people.")
-        print(f"Park balance: {self.cash_register.get_money()} units.")
+        print(f"Park balance: {self.cash_register.get_balance()} units.")

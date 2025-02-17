@@ -1,3 +1,5 @@
+from src.utils import get_menu_choice
+
 class Visitor:
     def __init__(self, name: str, age: int, height: float, balance: float):
         self.name = name
@@ -15,7 +17,7 @@ class Visitor:
             print(f"\n{self.name}, choose an attraction from your tickets:")
             for idx, ticket in enumerate(self.tickets, 1):
                 print(f"{idx}. {ticket.attraction.name}")
-            choice = int(input("Enter the attraction number: ")) - 1
+            choice = get_menu_choice("Enter the attraction number: ", range(1, len(self.tickets) + 1)) - 1
 
         if 0 <= choice < len(self.tickets):
             selected_ticket = self.tickets[choice]
