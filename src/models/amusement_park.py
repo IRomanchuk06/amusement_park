@@ -1,4 +1,4 @@
-from workers import *
+from src.models.workers import *
 
 
 class AmusementPark:
