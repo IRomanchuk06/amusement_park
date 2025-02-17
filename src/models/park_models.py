@@ -10,6 +10,7 @@ class Attraction:
         self.min_height = min_height
         self.ticket_limit = ticket_limit
         self.sold_tickets = 0
+        self.sold_tickets_stat = 0
         self.ride_duration = ride_duration
         self.ticket_price = ticket_price
         self.is_running = False
@@ -29,6 +30,7 @@ class Attraction:
     def sell_ticket(self):
         if self.sold_tickets < self.ticket_limit:
             self.sold_tickets += 1
+            self.sold_tickets_stat += 1
             return Ticket(self)
         return None
 

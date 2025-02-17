@@ -1,3 +1,4 @@
+import pickle
 from src import utils
 from src.models.workers import Cashier, RideManager
 from src.models.park_models import Attraction, Visitor
@@ -15,6 +16,22 @@ class ParkInterface:
         self.park.add_attraction(Attraction("Roller Coaster", 12, 1.4, 5, 5, 10.0))
         self.park.add_attraction(Attraction("Ferris Wheel", 5, 1.0, 10, 3, 5.0))
         self.park.add_cashier(self.cashier)
+
+    def save_to_file(self, filename):
+        try:
+            with open(filename, 'wb') as file:
+                pickle.dump(self.park, file)
+            print(f"Park saved to {filename}.")
+        except Exception as e:
+            print(f"Error saving park: {e}")
+
+    def load_from_file(self, filename):
+        try:
+            with open(filename, 'rb') as file:
+                self.park = pickle.load(file)
+            print(f"Park loaded from {filename}.")
+        except Exception as e:
+            print(f"Error loading park: {e}")
 
     def show_visitor_list(self):
         utils.display_header("registered visitors")
@@ -118,9 +135,11 @@ class ParkInterface:
             print("4. Join Ride Queue")
             print("5. Operate Attraction")
             print("6. Park Status Overview")
-            print("7. Exit System")
+            print("7. Save Park State")
+            print("8. Load Park State")
+            print("9. Exit System")
 
-            choice = utils.get_menu_choice("\nEnter option number: ", range(1,8))
+            choice = utils.get_menu_choice("\nEnter option number: ", range(1,10))
 
             if choice == 1:
                 self.add_visitor_flow()
@@ -135,9 +154,15 @@ class ParkInterface:
             elif choice == 6:
                 self.park.show_park_status()
             elif choice == 7:
+                filename = input("Enter the filename to save park state: ")
+                self.save_to_file(filename)
+            elif choice == 8:
+                filename = input("Enter the filename to load park state: ")
+                self.load_from_file(filename)
+            elif choice == 9:
                 print("\nExiting system... Thank you for using Park Manager!")
                 break
             else:
-                print("Invalid selection. Please choose 1-7")
+                print("Invalid selection. Please choose 1-9")
 
             input("\nPress Enter to continue...")
