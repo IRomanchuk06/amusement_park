@@ -24,11 +24,12 @@ class ParkInterface:
             print(f"Error saving park: {e}")
 
     def load_from_file(self, filename):
-        try:
+        park = AmusementPark.load_park_state(filename)
+        if park:
             self.park = AmusementPark.load_park_state(filename)
             print(f"Park loaded from {filename}.")
-        except Exception as e:
-            print(f"Error loading park: {e}")
+        else:
+            print(f"Error loading park.")
 
     def show_visitor_list(self):
         utils.display_header("registered visitors")
