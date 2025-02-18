@@ -48,6 +48,9 @@ class RideManager(Worker):
         super().__init__(name, Position.RIDE_MANAGER)
 
     def manage_queue_and_start(self, attraction: Attraction, queue: Queue):
+        if queue.is_queue_empty():
+            print(f"The line's empty, there's no one to run the ride with.")
+
         while not queue.is_queue_empty():
             visitor = queue.process_queue()
             if visitor:

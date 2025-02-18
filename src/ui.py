@@ -122,7 +122,6 @@ class ParkInterface:
 
         print(f"\nStarting {attraction.name} operation...")
         self.ride_manager.manage_queue_and_start(attraction, queue)
-        attraction.start_ride()
 
     def increase_visitor_balance(self):
         self.show_visitor_list()

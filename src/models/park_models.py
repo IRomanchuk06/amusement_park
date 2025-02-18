@@ -95,7 +95,6 @@ class Attraction:
                 print("\033[H\033[J", end="")
 
                 elapsed = time.time() - start_time
-                progress = elapsed / duration
                 remaining = duration - elapsed
 
                 print(f"Ride: {self.name} | Time left: {remaining:.1f}s")
@@ -113,7 +112,7 @@ class Attraction:
         except KeyboardInterrupt:
             print("\nRide interrupted by operator!")
         finally:
-            print("\033[H\033[J", end="")  # Окончательная очистка
+            print("\033[H\033[J", end="")
             self.end_ride()
 
     def end_ride(self):
