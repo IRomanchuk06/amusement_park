@@ -1,5 +1,5 @@
 from src.models.workers import *
-from src.serialization import save_to_file, load_from_file
+from src.utils.serialization_utils import SerializationUtils
 
 class AmusementPark:
     def __init__(self):
@@ -52,8 +52,8 @@ class AmusementPark:
             print("No visitors in the park.")
 
     def save_park_state(self, filename: str):
-        save_to_file(self, filename)
+        SerializationUtils.save_to_file(self, filename)
 
     @staticmethod
     def load_park_state(filename: str):
-        return load_from_file(filename)
+        return SerializationUtils.load_from_file(filename)

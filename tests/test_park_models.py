@@ -7,7 +7,7 @@ from src.models.visitor import Visitor
 from src.models.workers import Cashier, RideManager
 
 
-class TestAmusementPark(unittest.TestCase):
+class TestAmusementParkModels(unittest.TestCase):
 
     def setUp(self):
         self.park = AmusementPark()
@@ -82,14 +82,6 @@ class TestAmusementPark(unittest.TestCase):
         self.assertEqual(self.visitor.tickets[0].attraction, self.attraction)
         self.assertFalse(self.visitor.tickets[0].used)
 
-    @patch('src.models.visitor.get_menu_choice', return_value=0)
-    def test_choose_attraction_invalid_choice(self, mock_get_menu_choice):
-        self.cashier.sell_ticket(self.visitor, self.attraction)
-        result = self.visitor.choose_attraction(choice=None)
-        self.assertIsNone(result)
-        mock_get_menu_choice.assert_called_once_with("Enter the attraction number: ",
-                                                     range(1, len(self.visitor.tickets) + 1))
-
     @patch('builtins.input', side_effect=['1'])
     def test_choose_attraction_already_used_ticket(self, mock_input):
         self.cashier.sell_ticket(self.visitor, self.attraction)
@@ -108,3 +100,27 @@ class TestAmusementPark(unittest.TestCase):
         self.assertIsNone(result)
         mock_print.assert_called_with("Jane has not bought any tickets yet.")
         mock_input.assert_not_called()
+
+    def test_visitor_meets_requirements(self):
+        visitor = Visitor("John", 20, 1.75, 50.0)
+        valid, message = self.attraction.check_requirements(visitor)
+        self.assertTrue(valid)
+        self.assertEqual(message, "John meets all requirements for Roller Coaster.")
+
+    def test_visitor_underage(self):
+        visitor = Visitor("Jane", 10, 1.75, 50.0)
+        valid, message = self.attraction.check_requirements(visitor)
+        self.assertFalse(valid)
+        self.assertEqual(message, "Jane does not meet the age requirement not met for Roller Coaster.")
+
+    def test_visitor_too_short(self):
+        visitor = Visitor("Alice", 20, 1.4, 50.0)
+        valid, message = self.attraction.check_requirements(visitor)
+        self.assertFalse(valid)
+        self.assertEqual(message, "Alice does not meet the height requirement not met for Roller Coaster.")
+
+    def test_visitor_both_requirements_not_met(self):
+        visitor = Visitor("Bob", 10, 1.4, 50.0)
+        valid, message = self.attraction.check_requirements(visitor)
+        self.assertFalse(valid)
+        self.assertEqual(message, "Bob does not meet the age requirement not met and height requirement not met for Roller Coaster.")

@@ -1,8 +1,7 @@
-from src import utils
 from src.models.workers import Cashier, RideManager
 from src.models.park_models import Attraction, Visitor
 from src.models.amusement_park import AmusementPark
-from src.utils import get_age, get_height, get_num_greater_0, get_valid_input
+from src.utils import AmusementParkUtils
 
 
 class ParkInterface:
@@ -33,13 +32,13 @@ class ParkInterface:
             print(f"Error loading park.")
 
     def show_visitor_list(self):
-        utils.display_header("registered visitors")
+        AmusementParkUtils.display_header("registered visitors")
         for i, visitor in enumerate(self.park.visitors, 1):
             print(f"{i}. {visitor.name} | Age: {visitor.age} | "
                   f"Height: {visitor.height}m | Balance: ${visitor.balance:.2f}")
 
     def show_attraction_list(self, show_details=False):
-        utils.display_header("available attractions")
+        AmusementParkUtils.display_header("available attractions")
         for i, attr in enumerate(self.park.attractions, 1):
             status = "OPEN" if attr.has_available_tickets() else "SOLD OUT"
             details = (f"Min Age: {attr.min_age} | Min Height: {attr.min_height}m | "
@@ -49,16 +48,16 @@ class ParkInterface:
                 print(f"   {details}")
 
     def add_visitor_flow(self):
-        utils.display_header("new visitor registration")
+        AmusementParkUtils.display_header("new visitor registration")
         name = input("Enter visitor name: ").strip()
 
         if any(v.name.lower() == name.lower() for v in self.park.visitors):
             print(f"Error: Visitor '{name}' already exists!")
             return
 
-        age = get_age("Enter age (0-120): ")
-        height = get_height("Enter height (0-300): ")
-        balance = get_num_greater_0("Enter amount of money (> 0): ")
+        age = AmusementParkUtils.get_age("Enter age (0-120): ")
+        height = AmusementParkUtils.get_height("Enter height (0-300): ")
+        balance = AmusementParkUtils.get_num_greater_0("Enter amount of money (> 0): ")
 
         new_visitor = Visitor(name, age, height, balance)
         self.park.add_visitor(new_visitor)
@@ -69,14 +68,14 @@ class ParkInterface:
         if not self.park.visitors:
             return
 
-        vis_idx = utils.get_valid_input("\nSelect visitor number: ", int) - 1
+        vis_idx = AmusementParkUtils.get_valid_input("\nSelect visitor number: ", int) - 1
         if vis_idx < 0 or vis_idx >= len(self.park.visitors):
             print("Invalid visitor selection!")
             return
         visitor = self.park.visitors[vis_idx]
 
         self.show_attraction_list(show_details=True)
-        attr_idx = utils.get_valid_input("\nSelect attraction number: ", int) - 1
+        attr_idx = AmusementParkUtils.get_valid_input("\nSelect attraction number: ", int) - 1
         if attr_idx < 0 or attr_idx >= len(self.park.attractions):
             print("Invalid attraction selection!")
             return
@@ -90,7 +89,7 @@ class ParkInterface:
 
     def queue_management_flow(self):
         self.show_attraction_list()
-        attr_idx = utils.get_valid_input("\nSelect attraction number: ", int) - 1
+        attr_idx = AmusementParkUtils.get_valid_input("\nSelect attraction number: ", int) - 1
         if attr_idx < 0 or attr_idx >= len(self.park.attractions):
             print("Invalid attraction selection!")
             return
@@ -98,7 +97,7 @@ class ParkInterface:
         queue = self.park.queues[attr_idx]
 
         self.show_visitor_list()
-        vis_idx = utils.get_valid_input("\nSelect visitor number: ", int) - 1
+        vis_idx = AmusementParkUtils.get_valid_input("\nSelect visitor number: ", int) - 1
         if vis_idx < 0 or vis_idx >= len(self.park.visitors):
             print("Invalid visitor selection!")
             return
@@ -130,26 +129,26 @@ class ParkInterface:
             print("No visitors registered yet!")
             return
 
-        vis_idx = utils.get_valid_input("\nSelect visitor number: ", int) - 1
+        vis_idx = AmusementParkUtils.get_valid_input("\nSelect visitor number: ", int) - 1
         if vis_idx < 0 or vis_idx >= len(self.park.visitors):
             print("Invalid visitor selection!")
             return
 
         visitor = self.park.visitors[vis_idx]
-        amount = get_num_greater_0(f"Enter amount to add to {visitor.name}'s balance: $")
+        amount = AmusementParkUtils.get_num_greater_0(f"Enter amount to add to {visitor.name}'s balance: $")
 
         visitor.earn_money(amount)
         print(f"\nSuccess: {visitor.name}'s new balance is ${visitor.balance:.2f}")
 
     def add_attraction_flow(self):
-        utils.display_header("new attraction registration")
+        AmusementParkUtils.display_header("new attraction registration")
         name = input("Enter attraction name: ").strip()
-        min_age = get_age("Enter minimum age: ")
-        min_height = get_height("Enter minimum height (meters): ")
-        ticket_price = get_num_greater_0("Enter ticket price: $")
-        ticket_limit = get_valid_input("Enter ticket limit: ", int, lambda x: x > 0,
+        min_age = AmusementParkUtils.get_age("Enter minimum age: ")
+        min_height = AmusementParkUtils.get_height("Enter minimum height (meters): ")
+        ticket_price = AmusementParkUtils.get_num_greater_0("Enter ticket price: $")
+        ticket_limit = AmusementParkUtils.get_valid_input("Enter ticket limit: ", int, lambda x: x > 0,
                                        "Ticket limit must be greater than 0.")
-        sold_tickets = get_valid_input("Enter sold tickets: ", int, lambda x: 0 <= x <= ticket_limit,
+        sold_tickets = AmusementParkUtils.get_valid_input("Enter sold tickets: ", int, lambda x: 0 <= x <= ticket_limit,
                                        "Sold tickets must be between 0 and the ticket limit.")
 
         new_attraction = Attraction(name, min_age, min_height, ticket_limit, sold_tickets, ticket_price)
@@ -158,7 +157,7 @@ class ParkInterface:
 
     def main_menu(self):
         while True:
-            utils.display_header("amusement park management system")
+            AmusementParkUtils.display_header("amusement park management system")
             print("1. Register New Visitor")
             print("2. View Attractions")
             print("3. Purchase Ticket")
@@ -171,7 +170,7 @@ class ParkInterface:
             print("10. Top Up Visitor Balance")
             print("11. Exit System")
 
-            choice = utils.get_menu_choice("\nEnter option number: ", range(1, 12))
+            choice = AmusementParkUtils.get_menu_choice("\nEnter option number: ", range(1, 12))
 
             if choice == 1:
                 self.add_visitor_flow()

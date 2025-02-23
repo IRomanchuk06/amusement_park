@@ -1,4 +1,4 @@
-from src.utils import get_menu_choice
+from src.utils.park_utils import AmusementParkUtils
 
 class Visitor:
     def __init__(self, name: str, age: int, height: float, balance: float):
@@ -8,7 +8,7 @@ class Visitor:
         self.tickets = []
         self.balance = balance
 
-    def choose_attraction(self, choice: int = None):
+    def choose_attraction(self):
         if not self.tickets:
             print(f"{self.name} has not bought any tickets yet.")
             return None
@@ -17,7 +17,7 @@ class Visitor:
         for idx, ticket in enumerate(self.tickets, 1):
             print(f"{idx}. {ticket.attraction.name}")
 
-        choice = get_menu_choice("Enter the attraction number: ", range(1, len(self.tickets) + 1)) - 1
+        choice = AmusementParkUtils.get_menu_choice("Enter the attraction number: ", range(1, len(self.tickets) + 1)) - 1
 
         if choice < 0 or choice >= len(self.tickets):
             print(f"Invalid choice. Please choose a number between 1 and {len(self.tickets)}.")
