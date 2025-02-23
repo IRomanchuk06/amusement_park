@@ -1,17 +1,27 @@
 # 🎡 Amusement Park Simulator
 
 ## 📌 Overview
-Amusement Park Simulator is a command-line Python application that models an amusement park where visitors can buy tickets, queue for rides, and experience attractions while adhering to safety requirements. The system persists state between runs, allowing for a continuous simulation of park operations.
+**Amusement Park Simulator** is a Python-based command-line application that implements an amusement park simulation using **Object-Oriented Programming (OOP)** principles. It models the park’s functionality through a series of interconnected classes, such as visitors, attractions, and the park system itself.
 
+The program allows visitors to register, purchase tickets, and interact with various attractions, while managing queues, enforcing safety restrictions, and tracking the park's state. 
+
+Additionally, the application is thoroughly tested using **unit tests** to ensure the reliability of the core functionality and proper interaction between components.
 ## 🚀 Features
-- **Attraction Management** – Add, modify, and manage amusement park attractions.
-- **Visitor Interaction** – Simulate visitors entering the park, buying tickets, and joining queues.
-- **Ticket System** – Ensure ticket availability and enforce purchase limits.
-- **Queue System** – Manage queues dynamically based on attraction capacity.
-- **Safety Checks** – Enforce minimum age and height requirements for attractions.
-- **Persistence** – Save and load the park state between sessions.
+- **Object-Oriented Design** – Classes for visitors, attractions, and park management.
+- **Attraction Management** – Dynamically add, modify, and manage attractions.
+- **Queue System** – Manage attraction queues, ensuring capacity limits are respected.
+- **Visitor Interaction** – Register visitors, purchase tickets, and join ride queues.
+- **Safety and Restrictions** – Enforce height and age restrictions for certain rides.
+- **State Persistence** – Save and load the park state with **pickle**, allowing continuity between runs.
 - **CLI Interface** – Interact with the park using a clean command-line interface.
 - **Unit Tests** – Ensure system stability with comprehensive testing.
+- **Test Coverage** – The app is more than 90% covered by the tests.
+
+## 🔧 Technologies Used  
+- **Python** (OOP, CLI)
+- **Unittest & Mocks** (unit testing)
+- **Pickle** (state persistence)
+- **Coverage.py** (test coverage analysis)
 
 ## 🛠️ Installation
 ```sh
@@ -33,16 +43,17 @@ python -m src.main
 ```
 
 ### Available Commands:
-- `register_visitor` – Register a new visitor.  
-- `view_attractions` – Display the list of attractions.  
-- `purchase_ticket` – Purchase a ticket for a visitor.  
-- `join_ride_queue` – Add a visitor to a ride queue.  
-- `operate_attraction` – Process the next group in the queue.  
-- `park_status_overview` – Display the park’s current status.  
-- `save_park_state` – Save the park state to a file.  
+- `register_new_visitor` – Register a new visitor with their name, age, height, and balance.  
+- `view_attractions` – Display the list of available attractions with details.  
+- `purchase_ticket` – Purchase a ticket for a visitor for a selected attraction.  
+- `join_ride_queue` – Add a visitor to the ride queue for a selected attraction.  
+- `operate_attraction` – Start the operation of an attraction and manage the ride queue.  
+- `park_status_overview` – Display the current status of the park, including visitors and attractions.  
+- `save_park_state` – Save the current park state to a file.  
 - `load_park_state` – Load the park state from a file.  
 - `add_new_attraction` – Add a new attraction to the park.  
-- `exit_system` – Exit the system.  
+- `top_up_visitor_balance` – Increase a visitor’s balance by a specified amount.  
+- `exit_system` – Exit the system and end the session.
 
 ## 📂 Project Structure
 ```
@@ -53,11 +64,13 @@ python -m src.main
 │   │   ├── park_models.py
 │   │   ├── visitor.py
 │   │   ├── workers.py
-│   ├── serialization.py
+│   ├── utils
+│   │   ├── park_utils.py
+│   │   ├── serialization_utils.py
 │   ├── ui.py
-│   ├── utils.py
 │   ├── main.py
 ├── tests
+│   ├── test_amusement_park.py
 │   ├── test_park_models.py
 │   ├── test_serialization.py
 │   ├── test_utils.py
