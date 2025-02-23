@@ -1,7 +1,7 @@
 import unittest
-from test_park_models import TestAmusementPark
-from test_utils import TestUserInputFunctions
-from test_serialization import TestSerialization
+
+def load_tests(loader, tests, pattern):
+    return loader.discover('tests', pattern='test_*.py')
 
 if __name__ == "__main__":
     unittest.main()

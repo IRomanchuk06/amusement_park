@@ -2,6 +2,7 @@ from src import utils
 from src.models.workers import Cashier, RideManager
 from src.models.park_models import Attraction, Visitor
 from src.models.amusement_park import AmusementPark
+from src.utils import get_age, get_height, get_num_greater_0, get_valid_input
 
 
 class ParkInterface:
@@ -55,9 +56,9 @@ class ParkInterface:
             print(f"Error: Visitor '{name}' already exists!")
             return
 
-        age = utils.get_valid_input("Enter age: ", int)
-        height = utils.get_valid_input("Enter height (meters): ", float)
-        balance = utils.get_valid_input("Enter initial balance: $", float)
+        age = get_age("Enter age (0-120): ")
+        height = get_height("Enter height (0-300): ")
+        balance = get_num_greater_0("Enter amount of money (> 0): ")
 
         new_visitor = Visitor(name, age, height, balance)
         self.park.add_visitor(new_visitor)
@@ -135,7 +136,7 @@ class ParkInterface:
             return
 
         visitor = self.park.visitors[vis_idx]
-        amount = utils.get_valid_input(f"Enter amount to add to {visitor.name}'s balance: $", float)
+        amount = get_num_greater_0(f"Enter amount to add to {visitor.name}'s balance: $")
 
         visitor.earn_money(amount)
         print(f"\nSuccess: {visitor.name}'s new balance is ${visitor.balance:.2f}")
@@ -143,11 +144,13 @@ class ParkInterface:
     def add_attraction_flow(self):
         utils.display_header("new attraction registration")
         name = input("Enter attraction name: ").strip()
-        min_age = utils.get_valid_input("Enter minimum age: ", int)
-        min_height = utils.get_valid_input("Enter minimum height (meters): ", float)
-        ticket_price = utils.get_valid_input("Enter ticket price: $", float)
-        ticket_limit = utils.get_valid_input("Enter ticket limit: ", int)
-        sold_tickets = utils.get_valid_input("Enter sold tickets: ", int)
+        min_age = get_age("Enter minimum age: ")
+        min_height = get_height("Enter minimum height (meters): ")
+        ticket_price = get_num_greater_0("Enter ticket price: $")
+        ticket_limit = get_valid_input("Enter ticket limit: ", int, lambda x: x > 0,
+                                       "Ticket limit must be greater than 0.")
+        sold_tickets = get_valid_input("Enter sold tickets: ", int, lambda x: 0 <= x <= ticket_limit,
+                                       "Sold tickets must be between 0 and the ticket limit.")
 
         new_attraction = Attraction(name, min_age, min_height, ticket_limit, sold_tickets, ticket_price)
         self.park.add_attraction(new_attraction)
